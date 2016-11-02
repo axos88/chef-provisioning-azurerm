@@ -29,6 +29,8 @@ class Chef
 
       attr_reader :public_ip_resource
 
+      attribute :from_recipe
+
       def public_ip(resource_name, &resource_block)
         @public_ip_resource = Chef::Resource::AzurePublicIPAddress.new(resource_name.to_s, run_context)
         @public_ip_resource.action :nothing

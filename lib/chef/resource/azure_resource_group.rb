@@ -9,6 +9,8 @@ class Chef
       attribute :name, kind_of: String, name_attribute: true, regex: /^[\w\-\(\)\.]{0,80}$+(?<!\.)$/i
       attribute :location, kind_of: String, default: 'westus'
       attribute :tags, kind_of: Hash
+
+      child_resources :resources, { :resource_group => :name, :location => :location }
     end
   end
 end
