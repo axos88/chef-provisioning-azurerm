@@ -4,15 +4,12 @@ require 'chef/provisioning/azurerm/snakify'
 
 require 'pry'
 
-class Chef
-  class Resource
-    HIDDEN_IVARS = HIDDEN_IVARS + [:@recipe]
-  end
-end
+Chef::Resource.const_set(:HIDDEN_IVARS, Chef::Resource.send(:remove_const, :HIDDEN_IVARS) + [:@recipe])
 
 class Chef
   module Provisioning
     module AzureRM
+
       class AzureResource < Chef::Resource::LWRPBase
         @@attribute_overrides = []
 

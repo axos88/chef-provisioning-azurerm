@@ -44,14 +44,17 @@ class Chef
       end
 
       action :destroy do
-        converge_by("destroy Resource Group #{new_resource.name}") do
-          resource_group_exists = resource_management_client.resource_groups.check_existence(new_resource.name).value!
-          if resource_group_exists.body
-            result = resource_management_client.resource_groups.delete(new_resource.name).value!
-            Chef::Log.debug("result: #{result.body.inspect}")
-          else
-            action_handler.report_progress "Resource Group #{new_resource.name} was not found."
+        begin
+          if resource_group_exists?
+            converge_by("destroy Resource Group #{new_resource.name}") do
+              result = resource_management_client.resource_groups.delete(new_resource.name).value!
+              Chef::Log.debug("result: #{result.body.inspect}")
+            end
           end
+        rescue ::MsRestAzure::AzureOperationError => operation_error
+          raise operation_error if operation_error.body.nil?
+          Chef::Log.error operation_error.body['error']
+          raise "#{operation_error.body['error']['code']}: #{operation_error.body['error']['message']}"
         end
       end
     end

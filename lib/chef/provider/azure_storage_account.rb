@@ -11,7 +11,7 @@ class Chef
 
       def load_current_resource
         begin
-          binding.pry
+#          binding.pry
           azure_sa = storage_management_client.storage_accounts.get_properties(new_resource.resource_group, new_resource.name).value!.body
 
           @current_resource = Chef::Resource::AzureStorageAccount.new(new_resource.name)
